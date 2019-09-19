@@ -1,5 +1,7 @@
 package provagui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +10,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import javazoom.jl.converter.Converter;
 import javazoom.jl.decoder.JavaLayerException;
@@ -15,23 +21,35 @@ import javazoom.jl.decoder.JavaLayerException;
 public class Download {
 	private String song;
 	private File filewav;
-	public Download(String song) throws IOException {
-		this.song=song;
 
-	  File filemp3=new File("C:\\Users\\Utente\\AppData\\Local\\Temp\\"+song);
-if (!filemp3.exists()) {		
-		InputStream fis=new URL("http://thunderbeat.altervista.org/Sound/"+song).openStream();
+	public Download(File file) throws IOException {
+
+		this.song=file.getName();
+
+		File filein=new File("C:\\Users\\"+System.getProperty("user.name")+"\\AppData\\Local\\Temp\\"+song);
+
+		if (!filein.exists()) {		
+			Init init=new Init(song);
+			String c=init.Go().substring(1);
+		
+			InputStream fis=new URL("http://thunderbeat.altervista.org/Sound/"+c).openStream();
 		  
-		    OutputStream outstream = new FileOutputStream(filemp3);
+		    OutputStream outstream = new FileOutputStream(filein);
 		    byte[] buffer = new byte[50000000];
 		    int len;
 		    while ((len = fis.read(buffer)) > 0) {
 		        outstream.write(buffer, 0, len);
 		    }
 		    outstream.close();
-	}
-		    this.filewav=convertMP3toWAV(filemp3);
-		    filemp3.delete();
+		    System.out.println("Downloaded");
+		}else System.out.println("esiste gia");
+		// se non è un file wav lo converte
+		if (!filein.getName().substring(filein.getName().lastIndexOf(".")+1).equals("wav")) {
+			this.filewav=convertMP3toWAV(filein);
+			System.out.println("Converted");
+		}
+		else System.out.println("not downloaded");
+		filein.deleteOnExit();
 	}
 	public File getFileWav() {
 			return this.filewav;

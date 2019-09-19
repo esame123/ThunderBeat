@@ -23,8 +23,7 @@ public class UploadFile {
         MultipartEntity reqEntity = new MultipartEntity();
 
         reqEntity.addPart("userfile", uploadFile);
-        reqEntity.addPart("username", new StringBody("thomas"));
-        reqEntity.addPart("id", new StringBody("cacca!"));
+        reqEntity.addPart("username", new StringBody("thomas"));   //<<<<<<<<<-------- inserire classe utente.nome come stringa
         httpPost.setEntity(reqEntity);
 
         httpClient.getConnectionManager().shutdown();

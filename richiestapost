@@ -1,0 +1,30 @@
+		try {
+				    // open a connection to the site
+				    URL url = new URL("https://thunderbeat.altervista.org/login.php");
+				    URLConnection con = url.openConnection();
+				    // activate the output
+				    con.setDoOutput(true);
+				    PrintStream ps = new PrintStream(con.getOutputStream());
+				    // send your parameters to your site
+				    ps.print("username=" + usernameText.getText());		
+				    String password = new String(passwordText.getPassword());
+				    ps.print("&password=" + password);
+				    ps.print("&intent=login");				// PER FAR CAPIRE AL RICEVITORE CHE E' LOGIN
+				    // we have to get the input stream in order to actually send the request
+				
+				    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					StringBuffer sb=new StringBuffer();
+					String line;
+					
+					while((line=in.readLine())!=null) {
+						sb.append(line);
+						
+					}
+					System.out.println(sb.toString());
+				    // close the print stream
+				    ps.close();
+				    } catch (MalformedURLException ex) {
+				        ex.printStackTrace();
+				    } catch (IOException ex) {
+				        ex.printStackTrace();
+				    }
